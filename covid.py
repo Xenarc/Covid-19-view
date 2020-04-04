@@ -1,8 +1,11 @@
-import matplotlib.pyplot as plt 
+import matplotlib as mpl
+mpl.use('Agg')
+import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import optimize
 import numpy as np
 import csv
+
 
 Dates = []
 ACT = []
@@ -40,8 +43,9 @@ TAS = [float(i) for i in TAS[4:]]
 VIC = [float(i) for i in VIC[4:]]
 WA = [float(i) for i in WA[4:]]
 
-fig, graph = plt.subplots(3, 2)
-
+fig, graph = plt.subplots(3, 2, figsize=(20,20))
+fig.set_dpi(150)
+# plt.ion()
 
 old = 0
 deltas = []
@@ -81,6 +85,11 @@ graph[2][0].plot(xVals, deltas)
 graph[2][0].legend(["Delta", "Moving Average (n=10)"], loc='upper left')
 graph[2][0].set_title('Deltas')
 
+p = np.polyfit(xVals, np.log(deltas), 1)
+graph[2][1].plot(xVals, np.exp(p[1])*np.exp(p[0]*xVals))
+graph[2][1].legend(["Delta", "Moving Average (n=10)"], loc='upper left')
+graph[2][1].set_title('Deltas')
+
 graph[1][1].plot(xVals, ACT)
 graph[1][1].plot(xVals, NSW)
 graph[1][1].plot(xVals, NT)
@@ -93,7 +102,9 @@ graph[1][1].legend(["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"], loc='u
 graph[1][1].set_yscale('log')
 graph[1][1].set_title('State Cases (log)')
 
-plt.subplots_adjust(left = 0.05, right = 1, bottom = 0.05, top = 0.95, wspace = 0, hspace=0.2)
+plt.subplots_adjust(left = 0.1, right = 0.9, bottom = 0.1, top = 0.9, wspace = 0.2, hspace=0.2)
 
 # function to show the plot 
+# plt.ioff()
+plt.savefig('plot.png')
 plt.show()
