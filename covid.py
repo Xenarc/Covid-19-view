@@ -1,8 +1,12 @@
+import matplotlib as mpl
+#mpl.use('Agg')
 import matplotlib.pyplot as plt 
 import pandas as pd
 from scipy import optimize
 import numpy as np
 import csv
+
+print("Main")
 
 Dates = []
 ACT = []
@@ -40,8 +44,8 @@ TAS = [float(i) for i in TAS[4:]]
 VIC = [float(i) for i in VIC[4:]]
 WA = [float(i) for i in WA[4:]]
 
-fig, graph = plt.subplots(3, 2)
-
+fig, graph = plt.subplots(3, 2, )
+fig.set_size_inches(20, 20)
 
 old = 0
 deltas = []
@@ -76,9 +80,9 @@ graph[1][0].set_title('Cases per state')
 
 
 graph[2][0].plot(xVals, deltas)
-deltas = pd.Series(deltas).rolling(window=10).mean()
+deltas = pd.Series(deltas).rolling(window=3).mean()
 graph[2][0].plot(xVals, deltas)
-graph[2][0].legend(["Delta", "Moving Average (n=10)"], loc='upper left')
+graph[2][0].legend(["Delta", "Moving Average (n=3)"], loc='upper left')
 graph[2][0].set_title('Deltas')
 
 graph[1][1].plot(xVals, ACT)
@@ -93,7 +97,14 @@ graph[1][1].legend(["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"], loc='u
 graph[1][1].set_yscale('log')
 graph[1][1].set_title('State Cases (log)')
 
-plt.subplots_adjust(left = 0.05, right = 1, bottom = 0.05, top = 0.95, wspace = 0, hspace=0.2)
+graph[2][1].plot(xVals, deltas/totals)
+graph[2][1].set_title('Deltas as a % of total cases')
 
-# function to show the plot 
+plt.subplots_adjust(left = 0.05, right = 1, bottom = 0.05, top = 0.95, wspace = 0.05, hspace=0.2)
+
+# function to show the plot
+
 plt.show()
+print("Plot")
+
+fig.savefig('temp.png')
